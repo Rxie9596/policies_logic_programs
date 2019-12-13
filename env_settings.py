@@ -3,6 +3,7 @@ from generalization_grid_games.envs import checkmate_tactic
 from generalization_grid_games.envs import stop_the_fall as stf
 from generalization_grid_games.envs import chase as ec
 from generalization_grid_games.envs import reach_for_the_star as rfts
+from generalization_grid_games.envs import maze_navigation as mn
 
 import generalization_grid_games
 
@@ -18,5 +19,7 @@ def get_object_types(base_class_name):
         return ('ec.EMPTY', 'ec.TARGET', 'ec.AGENT', 'ec.WALL', 'ec.DRAWN', 'ec.LEFT_ARROW', 'ec.RIGHT_ARROW', 'ec.UP_ARROW', 'ec.DOWN_ARROW', 'None')
     if base_class_name == 'ReachForTheStar':
         return ('rfts.EMPTY', 'rfts.AGENT', 'rfts.STAR', 'rfts.DRAWN', 'rfts.LEFT_ARROW', 'rfts.RIGHT_ARROW', 'None')
+    if base_class_name == 'MazeNavigation':
+        return ('mn.EMPTY', 'mn.AGENT', 'mn.WALL', 'mn.GOAL', 'None')
 
     raise Exception("Unknown class name", base_class_name)

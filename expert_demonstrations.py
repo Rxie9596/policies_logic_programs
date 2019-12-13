@@ -27,6 +27,40 @@ def get_demo(base_name, expert_policy, env_num, max_demo_length=np.inf):
 
     return demonstrations
 
+def expert_maze_policy(layout):
+    rg, cg = np.argwhere(layout == mn.GOAL)[0]
+    ra, ca = np.argwhere(layout == mn.AGENT)[0]
+
+    left_arrow = tuple(np.argwhere(layout == mn.LEFT_ARROW)[0])
+    right_arrow = tuple(np.argwhere(layout == mn.RIGHT_ARROW)[0])
+    up_arrow = tuple(np.argwhere(layout == mn.UP_ARROW)[0])
+    down_arrow = tuple(np.argwhere(layout == mn.DOWN_ARROW)[0])
+
+    if ca < cg:
+        is_block = False
+        for citer in range(ca+1, cg+1):
+            if layout[ra][citer] == mn.WALL:
+                is_block = True
+                break
+        if is_block:
+            return up_arrow
+        else:
+            return right_arrow
+
+    elif ca > cg:
+        is_block = False
+        for citer in range(cg, ca):
+            if layout[ra][citer] == mn.WALL:
+                is_block = True
+                break
+        if is_block:
+            return up_arrow
+        else:
+            return left_arrow
+
+    else:
+        return down_arrow
+
 def expert_nim_policy(layout):
     r1 = np.max(np.argwhere(layout == tpn.EMPTY)[:, 0])
     if layout[r1, 0] == tpn.TOKEN:
@@ -182,9 +216,17 @@ def get_expert_policy(env_name):
         'CheckmateTactic' : expert_checkmate_tactic_policy,
         'StopTheFall' : expert_stf_policy,
         'Chase' : expert_ec_policy,
-        'ReachForTheStar' : expert_rfts_policy
+        'ReachForTheStar' : expert_rfts_policy,
+        'MazeNavigation' : expert_maze_policy
     }[env_name]
 
+# TODO
+def get_recorded_demos(env_name, demo_numbers=(1, 2, 3, 4), max_demo_length=np.inf):
+    pass
+
+# TODO
+def record_and_save_demo():
+    pass
 
 def get_demonstrations(env_name, demo_numbers=(1, 2, 3, 4), max_demo_length=np.inf):
     expert_policy = get_expert_policy(env_name)
@@ -211,6 +253,7 @@ def record_expert_demos(env_name, demo_numbers=(1, 2, 3, 4), outdir='/tmp', reco
 
 
 if __name__ == "__main__":
+    record_expert_demos('MazeNavigation', demo_numbers=tuple(range(20)))
     record_expert_demos('TwoPileNim', demo_numbers=(0,1,2))
     record_expert_demos('CheckmateTactic', demo_numbers=(0,1,2))
     record_expert_demos('Chase', demo_numbers=(0,1,2))
