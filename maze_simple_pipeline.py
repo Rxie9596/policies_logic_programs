@@ -19,6 +19,9 @@ import numpy as np
 import time
 import os
 
+import scipy.io as sio
+import random
+
 cache_dir = 'cache'
 
 
@@ -389,6 +392,62 @@ def test(policy, base_class_name, test_env_nums=range(11, 20), max_num_steps=50,
     return accuracies
 
 if __name__  == "__main__":
-    policy = train("MazeNavigation_simple", (0, 1, 2, 3, 4, 5, 6, 7), 1, 1000, 5, 25)
-    test_results = test(policy, "MazeNavigation_simple", (0, 1, 2, 3, 4, 5, 6, 7), record_videos=True)
-    print("Test results:", test_results)
+    # policy = train("MazeNavigation_simple", (0, 1, 2, 3, 4, 5, 6, 7), 1, 500, 5, 25)
+    # test_results = test(policy, "MazeNavigation_simple", (0, 1, 2, 3, 4, 5, 6, 7), record_videos=False)
+    # print("Test results:", test_results)
+
+    # # performance vs num of demo
+    # train_env = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    # test_env = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    # test_set = tuple(test_env)
+    #
+    # results = np.zeros((5, 10))
+    #
+    # for num_demo in range(1, 11):
+    #     for num_test in range(5):
+    #         train_set = random.sample(train_env, k=num_demo)
+    #         train_set = tuple(train_set)
+    #
+    #         policy = train("MazeNavigation_simple", train_set, 1, 500, 5, 25)
+    #         test_results = test(policy, "MazeNavigation_simple", test_set, record_videos=False)
+    #
+    #         performance = float(sum(test_results)) / float(len(test_results))
+    #         results[num_test][num_demo-1] = performance
+    #
+    #
+    # # Save
+    # name = 'simple_maze_per_vs_demo'
+    # save_directory = '/Users/yuxie/Lab/LPP/Data/' + name + '.mat'
+    #
+    # savedict = {}
+    # savedict[name] = results
+    # sio.savemat(save_directory, savedict)
+
+    # # performance vs num of programs
+    train_env = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    test_env = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    num_programs_list = [1, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+    num_demo = 6
+    test_set = tuple(test_env)
+
+    results = np.zeros((5, 10))
+
+    for num_prog in range(10):
+        for num_test in range(5):
+            train_set = random.sample(train_env, k=num_demo)
+            train_set = tuple(train_set)
+
+            policy = train("MazeNavigation_simple", train_set, 1, num_programs_list[num_prog], 5, 25)
+            test_results = test(policy, "MazeNavigation_simple", test_set, record_videos=False)
+
+            performance = float(sum(test_results)) / float(len(test_results))
+            results[num_test][num_prog] = performance
+
+
+    # Save
+    name = 'simple_maze_per_vs_programs'
+    save_directory = '/Users/yuxie/Lab/LPP/Data/' + name + '.mat'
+
+    savedict = {}
+    savedict[name] = results
+    sio.savemat(save_directory, savedict)
