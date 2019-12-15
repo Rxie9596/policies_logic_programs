@@ -61,6 +61,27 @@ def expert_maze_policy(layout):
     else:
         return down_arrow
 
+def expert_maze_simple_policy(layout):
+    rg, cg = np.argwhere(layout == mns.GOAL)[0]
+    ra, ca = np.argwhere(layout == mns.AGENT)[0]
+
+    left_arrow = tuple(np.argwhere(layout == mns.LEFT_ARROW)[0])
+    right_arrow = tuple(np.argwhere(layout == mns.RIGHT_ARROW)[0])
+    up_arrow = tuple(np.argwhere(layout == mns.UP_ARROW)[0])
+    down_arrow = tuple(np.argwhere(layout == mns.DOWN_ARROW)[0])
+
+    if layout[ra-1][ca] == mns.WALL:
+        if ca <= cg:
+            return right_arrow
+        else:
+            return left_arrow
+    elif (layout[ra-1][ca] == mns.EMPTY) or (layout[ra-1][ca] == mns.GOAL):
+        return up_arrow
+    else:
+        raise Exception('illegal position')
+
+
+
 def expert_nim_policy(layout):
     r1 = np.max(np.argwhere(layout == tpn.EMPTY)[:, 0])
     if layout[r1, 0] == tpn.TOKEN:
@@ -217,7 +238,8 @@ def get_expert_policy(env_name):
         'StopTheFall' : expert_stf_policy,
         'Chase' : expert_ec_policy,
         'ReachForTheStar' : expert_rfts_policy,
-        'MazeNavigation' : expert_maze_policy
+        'MazeNavigation' : expert_maze_policy,
+        'MazeNavigation_simple': expert_maze_simple_policy
     }[env_name]
 
 # TODO
@@ -254,6 +276,7 @@ def record_expert_demos(env_name, demo_numbers=(1, 2, 3, 4), outdir='/tmp', reco
 
 if __name__ == "__main__":
     record_expert_demos('MazeNavigation', demo_numbers=tuple(range(20)))
+    record_expert_demos('MazeNavigation_simple', demo_numbers=tuple(range(8)))
     record_expert_demos('TwoPileNim', demo_numbers=(0,1,2))
     record_expert_demos('CheckmateTactic', demo_numbers=(0,1,2))
     record_expert_demos('Chase', demo_numbers=(0,1,2))
