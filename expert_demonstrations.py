@@ -45,7 +45,10 @@ def expert_maze_policy(layout):
         if is_block:
             return up_arrow
         else:
-            return right_arrow
+            if layout[ra][ca+1] == mn.BARRIER:
+                return (ra, ca+1)
+            else:
+                return right_arrow
 
     elif ca > cg:
         is_block = False
@@ -56,8 +59,10 @@ def expert_maze_policy(layout):
         if is_block:
             return up_arrow
         else:
-            return left_arrow
-
+            if layout[ra][ca-1] == mn.BARRIER:
+                return (ra, ca-1)
+            else:
+                return left_arrow
     else:
         return down_arrow
 
@@ -276,7 +281,7 @@ def record_expert_demos(env_name, demo_numbers=(1, 2, 3, 4), outdir='/tmp', reco
 
 if __name__ == "__main__":
     record_expert_demos('MazeNavigation', demo_numbers=tuple(range(20)))
-    record_expert_demos('MazeNavigation_simple', demo_numbers=tuple(range(8)))
+    record_expert_demos('MazeNavigation_simple', demo_numbers=tuple(range(20)))
     record_expert_demos('TwoPileNim', demo_numbers=(0,1,2))
     record_expert_demos('CheckmateTactic', demo_numbers=(0,1,2))
     record_expert_demos('Chase', demo_numbers=(0,1,2))

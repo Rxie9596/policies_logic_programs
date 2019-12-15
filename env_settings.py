@@ -21,7 +21,7 @@ def get_object_types(base_class_name):
     if base_class_name == 'ReachForTheStar':
         return ('rfts.EMPTY', 'rfts.AGENT', 'rfts.STAR', 'rfts.DRAWN', 'rfts.LEFT_ARROW', 'rfts.RIGHT_ARROW', 'None')
     if base_class_name == 'MazeNavigation':
-        return ('mn.EMPTY', 'mn.AGENT', 'mn.WALL', 'mn.GOAL', 'mn.LEFT_ARROW', 'mn.RIGHT_ARROW', 'mn.UP_ARROW', 'mn.DOWN_ARROW', 'None')
+        return ('mn.EMPTY', 'mn.AGENT', 'mn.WALL', 'mn.GOAL', 'mn.LEFT_ARROW', 'mn.RIGHT_ARROW', 'mn.UP_ARROW', 'mn.DOWN_ARROW', 'mn.BARRIER', 'None')
     if base_class_name == 'MazeNavigation_simple':
         return ('mns.EMPTY', 'mns.AGENT', 'mns.WALL', 'mns.GOAL', 'None')
 
